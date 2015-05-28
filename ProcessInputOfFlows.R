@@ -2,7 +2,7 @@
 chr.run.path <- "C:/Temp/PEST/BigElkPEST/hydrology/UpdatedMetWDM"
 chr.uci.file <- "bigelk.uci"
 chr.tsproc.file <- "tsproc.dat"
-chr.file.model.out <- c("model_obs.out", "model_org.out", "model_upd01.out", "model_upd01.out")
+chr.file.model.out <- c("model_obs.out", "model_org.out", "model_updt00.out", "model_updt01.out")
 
 ## get simulation start date
 chr.uci <- scan(file=paste0(chr.run.path,"/",chr.uci.file), what="char()",sep="\n")

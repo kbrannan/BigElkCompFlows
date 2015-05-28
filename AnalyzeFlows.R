@@ -17,8 +17,8 @@ chr.data.tags.model <- grep("^m",read.table(text=gsub("^( ){1,}","",chr.new.tspr
 ## files with flow output
 chr.file.flow.obs <- "model_obs.out"
 chr.file.flow.org <- "model_org.out"
-chr.file.flow.upd.wdm <- "model_upd01.out"
-chr.file.flow.upd.wdm.date <- "model_upd01.out"
+chr.file.flow.upd.wdm <- "model_updt00.out"
+chr.file.flow.upd.wdm.date <- "model_updt01.out"
 
 ## read in flow data
 chr.data.obs <- scan(chr.file.flow.obs,what="char()",sep="\n", blank.lines.skip=FALSE)

@@ -21,7 +21,7 @@ file.rename(from="model.out", to="model_obs.out")
 
 ## run hspf for original met wdm file
 chr.xhspfx.org.cmd <- c("bigelk.uci","bigelk.sup")
-system(command="xhspfx",input=chr.xhspfx.org.cmd,wait=TRUE, show.output.on.console=FALSE)
+system(command="xhspfx",input=chr.xhspfx.org.cmd,wait=TRUE, show.output.on.console=TRUE)
 chr.tsproc.org.cmd <- c("tsproc.dat","tsproc.dat","tsproc.rec","n","n")
 system(command="tsproc",input=chr.tsproc.org.cmd,wait=TRUE, show.output.on.console=FALSE)
 file.rename(from="model.out", to="model_org.out")
