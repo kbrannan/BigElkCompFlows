@@ -1,18 +1,18 @@
 ## inputs
 chr.run.path <- "C:/Temp/PEST/BigElkPEST/hydrology/UpdatedMetWDM"
-chr.uci.file <- "bigelk.uci"
-chr.tsproc.file <- "tsproc.dat"
+chr.uci.file <- "bigelk_org.uci"
+chr.tsproc.file <- c("tsproc_obs.dat","tsproc_org.dat","tsproc_updt00.dat","tsproc_updt01.dat")
 chr.file.model.out <- c("model_obs.out", "model_org.out", "model_updt00.out", "model_updt01.out")
+
 
 ## get simulation start date
 chr.uci <- scan(file=paste0(chr.run.path,"/",chr.uci.file), what="char()",sep="\n")
 dte.start <- as.Date(gsub("(^[ aA-zZ]{1,})|( 00:.*$)","", grep("^.*START",chr.uci,value=TRUE)),format="%Y/%m/%d")
 
 ## get tsproc input file
-chr.tsproc.dat <- scan(file=paste0(chr.run.path,"/",chr.tsproc.file),what="char()",sep="\n")
+chr.tsproc.dat <- scan(file=paste0(chr.run.path,"/",chr.tsproc.file[1]),what="char()",sep="\n")
 chr.new.tsproc <- grep("NEW_",chr.tsproc.dat, value=TRUE)
-chr.data.tags.obs <- grep("^o",read.table(text=gsub("^( ){1,}","",chr.new.tsproc), sep=" ",colClasses="character")[,-1],value=TRUE)
-chr.data.tags.model <- grep("^m",read.table(text=gsub("^( ){1,}","",chr.new.tsproc), sep=" ",colClasses="character")[,-1],value=TRUE)
+chr.data.tags <- read.table(text=gsub("^( ){1,}","",chr.new.tsproc), sep=" ",colClasses="character")[,-1]
 
 ## start data frame
 df.data.flow <- data.frame(file="",type="",name="",date=as.Date("2999-01-01"),value=-9.9E-99,
@@ -20,7 +20,11 @@ df.data.flow <- data.frame(file="",type="",name="",date=as.Date("2999-01-01"),va
 
 ## process files and construct data frame for flow info
 for(ii in seq(from=1, to=length(chr.file.model.out), by=1)) {
-  
+  ## get tsproc input file
+  chr.tsproc.dat <- scan(file=paste0(chr.run.path,"/",chr.tsproc.file[ii]),what="char()",sep="\n")
+  chr.new.tsproc <- grep("NEW_",chr.tsproc.dat, value=TRUE)
+  chr.data.tags <- read.table(text=gsub("^( ){1,}","",chr.new.tsproc), sep=" ",colClasses="character")[,-1]
+    
   ## read model out file
   tmp.data <- scan(file=paste0(chr.run.path,"/",chr.file.model.out[ii]),what="char()",sep="\n", blank.lines.skip=FALSE)
   
