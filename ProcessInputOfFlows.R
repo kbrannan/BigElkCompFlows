@@ -144,3 +144,5 @@ df.data.flow <- as.data.frame(lapply(df.data.flow,function(x) if(is.factor(x)) f
 df.data.flow$comments <- as.character(df.data.flow$comments)
 
 
+## save copy of df.data.flow
+save(df.data.flow,file=paste0(chr.run.path,"/flowdata.RData"))

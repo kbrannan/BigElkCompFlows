@@ -1,0 +1,52 @@
+---
+title: "Comapre Flows from Updated WDM files"
+author: "Kevin Brannan"
+date: "Monday, June 08, 2015"
+output: word_document
+---
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>. When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+# load packages
+library(doBy)
+library(ggplot2)
+```
+
+
+```{r}
+# load data
+chr.run.path <- "C:/Temp/PEST/BigElkPEST/hydrology/UpdatedMetWDM"
+load(file=paste0(chr.run.path,"/flowdata.RData"))
+```
+
+```{r}
+# create summary
+# convert drainage area of Big Elk Creek from sqr mi to acres-ft using 1 acre = 43560 sqr ft
+df.summ00 <- summaryBy((value/43560) ~ file + name, 
+                       data=df.data.flow[df.data.flow$type=="V_TABLE" & 
+                                           df.data.flow$comments=="begin date",],
+                       FUN=c(sum,mean), var.names="vol.ac.ft")
+df.summ00 <- cbind(df.summ00,period=factor(gsub("^.*_","", as.character(df.summ00$name)),levels=unique(gsub("^.*_","", as.character(df.summ00$name)))))
+```
+
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+## plots of totals
+p00 <- ggplot(data=df.summ00) + 
+  geom_bar(aes(x=file,y=vol.ac.ft.sum,fill=file),stat="identity") +
+  facet_grid(~period)
+plot(p00)
+```
+
+```{r, echo=FALSE}
+p01 <- ggplot(data=df.summ00) + 
+  geom_bar(aes(x=file,y=vol.ac.ft.mean,fill=file),stat="identity") +
+  facet_grid(~period)
+plot(p01)  
+```
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
