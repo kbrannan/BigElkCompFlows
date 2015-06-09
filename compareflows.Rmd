@@ -11,6 +11,7 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 # load packages
 library(doBy)
 library(ggplot2)
+library(knitr)
 ```
 
 
@@ -48,5 +49,49 @@ p01 <- ggplot(data=df.summ00) +
 plot(p01)  
 ```
 
+
+
+```{r, results='asis'}
+x<-kable(df.summ00[df.summ00$period=="ann",c("file","vol.ac.ft.sum")],
+      format="markdown",row.names=FALSE)
+```
+
+
+```{r, results='asis'}
+x<-kable(df.summ00[df.summ00$period=="smr",c("file","vol.ac.ft.sum")],
+      format="markdown",row.names=FALSE)
+```
+
+```{r, results='asis'}
+x<-kable(df.summ00[df.summ00$period=="wtr",c("file","vol.ac.ft.sum")],
+      format="markdown",row.names=FALSE)
+```
+
+```{r, results='asis'}
+x<-kable(df.summ00[df.summ00$period=="stm",c("file","vol.ac.ft.sum")],
+      format="markdown",row.names=FALSE)
+```
+
+
+```{r, results='asis'}
+x<-kable(df.summ00[df.summ00$period=="ann",c("file","vol.ac.ft.mean")],
+      format="markdown",row.names=FALSE)
+```
+
+
+```{r, results='asis'}
+x<-kable(df.summ00[df.summ00$period=="smr",c("file","vol.ac.ft.mean")],
+      format="markdown",row.names=FALSE)
+```
+
+```{r, results='asis'}
+x<-kable(df.summ00[df.summ00$period=="wtr",c("file","vol.ac.ft.mean")],
+      format="markdown",row.names=FALSE)
+```
+
+```{r, results='asis'}
+x<-kable(df.summ00[df.summ00$period=="stm",c("file","vol.ac.ft.mean")],
+      format="markdown",row.names=FALSE)
+```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
