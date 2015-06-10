@@ -1,28 +1,39 @@
 ---
 title: "Comapre Flows from Updated WDM files"
 author: "Kevin Brannan"
-date: "Monday, June 08, 2015"
+date: 'Wednesday, June 10, 2015'
 output: word_document
 ---
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>. When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+I compared the simulated flows from simulations using the original and updated WDM files for Big Elk Creek. I compared the total volumes for the entire simulation periods, summers, winters, and storms. I used the definitions for periods from the original hydrologic calibration (see table below). The scripts used to do this analysis is avalable at: https://github.com/kbrannan/BigElkCompFlows
 
+Packages used:
 ```{r}
-# load packages
 library(doBy)
 library(ggplot2)
 library(knitr)
 ```
 
+Table 1. Dates and periods for the simulation, summer and winter.
 
+Period                            Begin-End 
+--------------------------------  ----------------------------
+Original WDM simulation           1995-10-01 to 2010-12-31
+Updated WDM simulation            1995-10-01 to 2014-05-31
+Summer*                           June through August
+Winter*                           September through May
+
+* These were the poriods used in the hydrologic calibration
+
+Set path for analysis and load data from previous runs
 ```{r}
 # load data
 chr.run.path <- "C:/Temp/PEST/BigElkPEST/hydrology/UpdatedMetWDM"
 load(file=paste0(chr.run.path,"/flowdata.RData"))
 ```
 
+Create summary table of the runs
 ```{r}
-# create summary
 # convert drainage area of Big Elk Creek from sqr mi to acres-ft using 1 acre = 43560 sqr ft
 df.summ00 <- summaryBy((value/43560) ~ file + name, 
                        data=df.data.flow[df.data.flow$type=="V_TABLE" & 
@@ -31,67 +42,91 @@ df.summ00 <- summaryBy((value/43560) ~ file + name,
 df.summ00 <- cbind(df.summ00,period=factor(gsub("^.*_","", as.character(df.summ00$name)),levels=unique(gsub("^.*_","", as.character(df.summ00$name)))))
 ```
 
+Here is what the summary looks like:
+```{r, results='asis'}
+kable(df.summ00,format="markdown",row.names=FALSE)
+```
 
-You can also embed plots, for example:
+I added a new variable to the summary that is clearer than the "file" variable used in the original data (See Table 2).
+
+Table 2. Cross reference of run name with wdm file and simulation period used.
+
+Run name         WDM file     Simulation Period         Description
+---------------  -----------  ------------------------  -----------------------------
+Obs              NA           NA                        Observed flow data
+Original         Original     1995-10-01 to 2010-12-31  Original WDM file and simulation period
+Update WDM       Updated      1995-10-01 to 2010-12-31  Updated WDM file and simulation period
+Update WDM-Sim   Updated      1995-10-01 to 2014-05-31  Updated WDM file and simulation period
+
+Adding the new variable "var.name" as a factor to identify what file/run and "long.per" for the period. 
+```{r}
+df.file <- data.frame(file=unique(df.summ00$file),var.name=c("Obs","Original","Update WDM","Update WDM-Sim"))
+df.summ01 <- merge(df.summ00,df.file)
+df.period <- data.frame(period=unique(df.summ00$period),long.per=c("Sim-period","Summer","Winter","Storm"))
+df.summ01 <- merge(df.summ01,df.period)
+str(df.summ01)
+```
+
+
 
 ```{r, echo=FALSE}
 ## plots of totals
-p00 <- ggplot(data=df.summ00) + 
-  geom_bar(aes(x=file,y=vol.ac.ft.sum,fill=file),stat="identity") +
-  facet_grid(~period)
+p00 <- ggplot(data=df.summ01) + 
+  geom_bar(aes(x=var.name,y=vol.ac.ft.sum,fill=var.name),stat="identity") +
+  facet_grid(~long.per) +
+  xlab("") + ylab("Sum (ac-ft)")
 plot(p00)
 ```
 
 ```{r, echo=FALSE}
-p01 <- ggplot(data=df.summ00) + 
-  geom_bar(aes(x=file,y=vol.ac.ft.mean,fill=file),stat="identity") +
-  facet_grid(~period)
+p01 <- ggplot(data=df.summ01) + 
+  geom_bar(aes(x=var.name,y=vol.ac.ft.mean,fill=var.name),stat="identity") +
+  facet_grid(~long.per) +
+  xlab("") + ylab("Annual Mean (ac-ft)")
 plot(p01)  
 ```
 
 
 
 ```{r, results='asis'}
-x<-kable(df.summ00[df.summ00$period=="ann",c("file","vol.ac.ft.sum")],
+x<-kable(df.summ01[df.summ01$period=="ann",c("var.name","vol.ac.ft.sum")],
       format="markdown",row.names=FALSE)
 ```
 
 
 ```{r, results='asis'}
-x<-kable(df.summ00[df.summ00$period=="smr",c("file","vol.ac.ft.sum")],
+x<-kable(df.summ01[df.summ01$period=="smr",c("var.name","vol.ac.ft.sum")],
       format="markdown",row.names=FALSE)
 ```
 
 ```{r, results='asis'}
-x<-kable(df.summ00[df.summ00$period=="wtr",c("file","vol.ac.ft.sum")],
+x<-kable(df.summ01[df.summ00$period=="wtr",c("var.name","vol.ac.ft.sum")],
       format="markdown",row.names=FALSE)
 ```
 
 ```{r, results='asis'}
-x<-kable(df.summ00[df.summ00$period=="stm",c("file","vol.ac.ft.sum")],
-      format="markdown",row.names=FALSE)
-```
-
-
-```{r, results='asis'}
-x<-kable(df.summ00[df.summ00$period=="ann",c("file","vol.ac.ft.mean")],
+x<-kable(df.summ01[df.summ00$period=="stm",c("var.name","vol.ac.ft.sum")],
       format="markdown",row.names=FALSE)
 ```
 
 
 ```{r, results='asis'}
-x<-kable(df.summ00[df.summ00$period=="smr",c("file","vol.ac.ft.mean")],
+x<-kable(df.summ01[df.summ00$period=="ann",c("var.name","vol.ac.ft.mean")],
+      format="markdown",row.names=FALSE)
+```
+
+
+```{r, results='asis'}
+x<-kable(df.summ01[df.summ00$period=="smr",c("var.name","vol.ac.ft.mean")],
       format="markdown",row.names=FALSE)
 ```
 
 ```{r, results='asis'}
-x<-kable(df.summ00[df.summ00$period=="wtr",c("file","vol.ac.ft.mean")],
+x<-kable(df.summ01[df.summ00$period=="wtr",c("var.name","vol.ac.ft.mean")],
       format="markdown",row.names=FALSE)
 ```
 
 ```{r, results='asis'}
-x<-kable(df.summ00[df.summ00$period=="stm",c("file","vol.ac.ft.mean")],
+x<-kable(df.summ01[df.summ00$period=="stm",c("var.name","vol.ac.ft.mean")],
       format="markdown",row.names=FALSE)
 ```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
