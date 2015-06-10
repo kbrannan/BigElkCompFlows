@@ -12,6 +12,7 @@ Packages used:
 library(doBy)
 library(ggplot2)
 library(knitr)
+library(xtable)
 ```
 
 Table 1. Dates and periods for the simulation, summer and winter.
@@ -60,32 +61,43 @@ Update WDM-Sim   Updated      1995-10-01 to 2014-05-31  Updated WDM file and sim
 
 Adding the new variable "var.name" as a factor to identify what file/run and "long.per" for the period. 
 ```{r}
-df.file <- data.frame(file=unique(df.summ00$file),var.name=c("Obs","Original","Update WDM","Update WDM-Sim"))
+df.file <- data.frame(file=unique(df.summ00$file),var.name=factor(c("Obs","Original","Update WDM","Update WDM-Sim"),levels=c("Obs","Original","Update WDM","Update WDM-Sim")))
 df.summ01 <- merge(df.summ00,df.file)
-df.period <- data.frame(period=unique(df.summ00$period),long.per=c("Sim-period","Summer","Winter","Storm"))
+df.period <- data.frame(period=unique(df.summ00$period),long.per=factor(c("Sim-period","Summer","Winter","Storm"),levels=c("Sim-period","Summer","Winter","Storm")))
 df.summ01 <- merge(df.summ01,df.period)
 str(df.summ01)
 ```
 
 
-
+Figure 1. Sum of flow-volume for each run by period.
 ```{r, echo=FALSE}
 ## plots of totals
 p00 <- ggplot(data=df.summ01) + 
   geom_bar(aes(x=var.name,y=vol.ac.ft.sum,fill=var.name),stat="identity") +
   facet_grid(~long.per) +
-  xlab("") + ylab("Sum (ac-ft)")
+  theme(axis.title.x=element_blank(), 
+        axis.text.x=element_blank(), 
+        axis.ticks=element_blank(),
+        legend.position="bottom",
+        legend.title=element_blank()) +
+  ylab("Sum (ac-ft)")
 plot(p00)
 ```
 
+
+Figure 2. Annual average of flow-volume for each run by period.
 ```{r, echo=FALSE}
 p01 <- ggplot(data=df.summ01) + 
   geom_bar(aes(x=var.name,y=vol.ac.ft.mean,fill=var.name),stat="identity") +
   facet_grid(~long.per) +
-  xlab("") + ylab("Annual Mean (ac-ft)")
+  theme(axis.title.x=element_blank(), 
+        axis.text.x=element_blank(), 
+        axis.ticks=element_blank(),
+        legend.position="bottom",
+        legend.title=element_blank()) +
+  ylab("Annual Mean (ac-ft)")
 plot(p01)  
 ```
-
 
 
 ```{r, results='asis'}
