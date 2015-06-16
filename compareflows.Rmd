@@ -112,33 +112,33 @@ x<-kable(df.summ01[df.summ01$period=="smr",c("var.name","vol.ac.ft.sum")],
 ```
 
 ```{r, results='asis'}
-x<-kable(df.summ01[df.summ00$period=="wtr",c("var.name","vol.ac.ft.sum")],
+x<-kable(df.summ01[df.summ01$period=="wtr",c("var.name","vol.ac.ft.sum")],
       format="markdown",row.names=FALSE)
 ```
 
 ```{r, results='asis'}
-x<-kable(df.summ01[df.summ00$period=="stm",c("var.name","vol.ac.ft.sum")],
-      format="markdown",row.names=FALSE)
-```
-
-
-```{r, results='asis'}
-x<-kable(df.summ01[df.summ00$period=="ann",c("var.name","vol.ac.ft.mean")],
+x<-kable(df.summ01[df.summ01$period=="stm",c("var.name","vol.ac.ft.sum")],
       format="markdown",row.names=FALSE)
 ```
 
 
 ```{r, results='asis'}
-x<-kable(df.summ01[df.summ00$period=="smr",c("var.name","vol.ac.ft.mean")],
+x<-kable(df.summ01[df.summ01$period=="ann",c("var.name","vol.ac.ft.mean")],
+      format="markdown",row.names=FALSE)
+```
+
+
+```{r, results='asis'}
+x<-kable(df.summ01[df.summ01$period=="smr",c("var.name","vol.ac.ft.mean")],
       format="markdown",row.names=FALSE)
 ```
 
 ```{r, results='asis'}
-x<-kable(df.summ01[df.summ00$period=="wtr",c("var.name","vol.ac.ft.mean")],
+x<-kable(df.summ01[df.summ01$period=="wtr",c("var.name","vol.ac.ft.mean")],
       format="markdown",row.names=FALSE)
 ```
 
 ```{r, results='asis'}
-x<-kable(df.summ01[df.summ00$period=="stm",c("var.name","vol.ac.ft.mean")],
+x<-kable(df.summ01[df.summ01$period=="stm",c("var.name","vol.ac.ft.mean")],
       format="markdown",row.names=FALSE)
 ```
